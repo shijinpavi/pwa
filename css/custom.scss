@@ -1,0 +1,100 @@
+
+@mixin sass-themify-init($scheme-table){
+    @if $scheme-table == null{
+      @error "[sass-themify] sass-themify mixin needs a valid $scheme-table map defined"
+    } @else {
+      @if variable-exists("sass-themify-scheme-table") {
+        @warn "[sass-themify] sass-themify has already been initialized once. Initializing again will replace the previous initialized color scheme"
+      }
+      $sass-themify-scheme-table: $scheme-table !global;
+    }
+  }
+  
+  @mixin sass-themify($element:"body"){
+    //determine if global varaible has been declared or not
+    @if not variable-exists("sass-themify-theme-name") {
+      $sass-themify-theme-name: null !global;
+    }
+  
+    @each $theme-name, $color-map in $sass-themify-scheme-table{
+      $sass-themify-theme-name: $theme-name !global;
+      @if $theme-name != "default"{
+        #{$element}.#{$theme-name}{
+          @content;
+        }
+      } @else {
+        #{$element}{
+          @content;
+        }
+      }
+      $sass-themify-theme-name: null !global;
+    }
+  }
+  
+  @function sass-themify-get-map-deep($map, $keys...) {
+    @each $key in $keys {
+      $map: map-get($map, $key);
+    }
+    @return $map;
+  }
+  
+  
+  @function sass-themify-get-color($component){
+    @if $sass-themify-scheme-table == null {
+      @error "[sass-themify] You need to call sass-themify mixin to initialize a theme before you can call the sass-themify-get function.";
+    }
+    @if $sass-themify-theme-name == null {
+      @error "[sass-themify] sass-themify-get function can only be used within the scope of the 'sass-themify' mixin.";
+    }
+    @return sass-themify-get-map-deep($sass-themify-scheme-table,$sass-themify-theme-name,$component);
+  }
+  
+  @function sass-themify-get-theme-name(){
+    @return $sass-themify-theme-name;
+  }
+
+
+$theme-map: (
+  'default':(
+    'text-color':gray,
+    'background-color':black,
+    'background':#ededed
+  ),
+  'red':(
+    'text-color':orange,
+    'background-color':red,
+    'background':#ed8c8c
+  ),
+  'blue':(
+    'text-color':red,
+    'background-color':blue,
+    'background':#a2d3f1
+  ),
+  'green':(
+    'text-color':rgb(0, 108, 5),
+    'background-color':rgb(0, 135, 74),
+    'background':#a2f1bb
+  )
+);
+
+
+//call initialize mixin with the theme-map variable
+@include sass-themify-init($theme-map);
+
+ 
+  //color related css goes under here within sass-themify mixin
+  @include sass-themify(){
+    &{
+        background: sass-themify-get-color("background");
+    }
+    
+    .card--link{
+      background-color: sass-themify-get-color("background-color");
+      
+    }
+    nav {
+        h1{
+            color: sass-themify-get-color("text-color");
+        }
+        }
+    }

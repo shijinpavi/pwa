@@ -1,0 +1,39 @@
+body {
+  background: #ededed;
+}
+body .card--link {
+  background-color: black;
+}
+body nav h1 {
+  color: gray;
+}
+
+body.red {
+  background: #ed8c8c;
+}
+body.red .card--link {
+  background-color: red;
+}
+body.red nav h1 {
+  color: orange;
+}
+
+body.blue {
+  background: #a2d3f1;
+}
+body.blue .card--link {
+  background-color: blue;
+}
+body.blue nav h1 {
+  color: red;
+}
+
+body.green {
+  background: #a2f1bb;
+}
+body.green .card--link {
+  background-color: rgb(0, 135, 74);
+}
+body.green nav h1 {
+  color: rgb(0, 108, 5);
+}
